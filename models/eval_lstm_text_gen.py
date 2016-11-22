@@ -22,7 +22,9 @@ import random
 import sys
 import re
 
-path = get_file('nietzsche.txt', origin="https://s3.amazonaws.com/text-datasets/nietzsche.txt")
+#path = get_file('nietzsche.txt', origin="https://s3.amazonaws.com/text-datasets/nietzsche.txt")
+#print (path)
+path = "/if24/mr5ba/Masud/PythonProjects/dataset/autocode_data/train_data.txt"
 #path = get_file('combined_queryparser.txt',origin="/if24/mr5ba/Masud/deeplearning/dataset/combined_queryparser.txt")
 path_test = "/if24/mr5ba/Masud/deeplearning/dataset/combined_queries.txt"
 text = open(path).read().lower()
