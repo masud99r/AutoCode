@@ -20,9 +20,11 @@ import numpy as np
 import random
 import sys
 
-path = get_file('nietzsche.txt', origin="https://s3.amazonaws.com/text-datasets/nietzsche.txt")
+#path = get_file('nietzsche.txt', origin="https://s3.amazonaws.com/text-datasets/nietzsche.txt")
 #path = get_file('combined_queryparser.txt',origin="/if24/mr5ba/Masud/deeplearning/dataset/combined_queryparser.txt")
 #path = "/if24/mr5ba/Masud/deeplearning/dataset/combined_queries.txt"
+path = "/if24/mr5ba/Masud/PythonProjects/dataset/autocode_data/train_data_code.txt"
+
 text = open(path).read().lower()
 #print('corpus length:', len(text))
 #print('Text length = ', len(text.split()))
@@ -77,11 +79,11 @@ def sample(preds, temperature=1.0):
     return np.argmax(preds)
 
 # train the model, output generated text after each iteration
-for iteration in range(1, 100):#changed
+for iteration in range(1, 200):#changed
     print()
     print('-' * 100)
     print('Iteration', iteration)
     model.fit(X, y, batch_size=128, nb_epoch=1)
     print ("Saving model")
-    model.save("char_lstm_100.h5",True)
-    print("Modle Saved")
+    model.save("code_char_lstm_200.h5",True)
+    print("Model Saved")

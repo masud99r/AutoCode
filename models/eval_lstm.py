@@ -24,10 +24,11 @@ import re
 
 #path = get_file('nietzsche.txt', origin="https://s3.amazonaws.com/text-datasets/nietzsche.txt")
 #print (path)
-path = "/if24/mr5ba/Masud/PythonProjects/dataset/autocode_data/train_data.txt"
+path = "/if24/mr5ba/Masud/PythonProjects/dataset/autocode_data/train_data_code.txt"
 #path = get_file('combined_queryparser.txt',origin="/if24/mr5ba/Masud/deeplearning/dataset/combined_queryparser.txt")
-path_test = "/if24/mr5ba/Masud/deeplearning/dataset/combined_queries.txt"
+path_test = "/if24/mr5ba/Masud/PythonProjects/dataset/autocode_data/test_data_code.txt"
 text = open(path).read().lower()
+#text = re.sub('[^A-Za-z0-9 ]+', '', text_garbase)
 test_text_lower = open(path_test).read().lower()
 test_text = re.sub('[^A-Za-z0-9 ]+', '', test_text_lower)
 
@@ -59,7 +60,7 @@ generated = 'START '
 #sentence ="asily wiped out, easily extinguished, by".lower()
 char_seq=''
 #print ("Sentence len = ", len(sentence))
-model = load_model("lstm_keras_50_iteration_60.h5")
+model = load_model("code_char_lstm_20.h5")
 '''
 for i in range(400):
     x = np.zeros((1, maxlen, len(chars)))
@@ -84,14 +85,21 @@ print(generated)
 
 start_index =0
 generated = ''
-sentence = test_text[start_index: start_index + maxlen]
-generated += sentence
-print('----- Generating with seed: "' + sentence + '"')
-sys.stdout.write(generated)
+seglen = 10
+#sentence = test_text[start_index: start_index + seglen]
+#generated += sentence
+#print('----- Generating with seed: "' + sentence + '"')
+#sys.stdout.write(generated)
 
-for i in range(2):
+Hx = 0
+print("Vocabulary length = "+str(len(chars)))
+for i in range(50):
+    if start_index + seglen < len(test_text)-1: #reserve last char to get probability
+        sentence = test_text[start_index: start_index + seglen]
+    char_to_test = test_text[start_index+seglen]
+
     x = np.zeros((1, maxlen, len(chars)))
-    print(len(chars))
+
     #for t, char in enumerate(chars):
     #    x[0, t, char_indices[char]] = 0
 
@@ -100,24 +108,22 @@ for i in range(2):
             continue
         x[0, t, char_indices[char]] = 1
 
-    print ("X= ",len(x.tolist()))
-    print("X= ", len(x.tolist()[0]))
+    #print ("X= ",len(x.tolist()))
+    #print("X= ", len(x.tolist()[0]))
     preds = model.predict(x, verbose=0)[0]
-    index_c = char_indices['c']
+    index_c = char_indices[char_to_test]
     #print preds[1]
     list_pred = preds.tolist()
+    #print ("Sentence: "+sentence)
+    prob_c = list_pred[index_c]
+    Hx = Hx + prob_c * np.log2(prob_c)
 
-    print(list_pred[index_c])
-
-    next_index = sample(preds, 0.2)
-    next_char = indices_char[next_index]
-
-    generated += next_char
-    sentence = sentence[1:] + next_char
-
-    sys.stdout.write(next_char)
-    sys.stdout.flush()
-print()
+    #print(char_to_test+" = "+str(prob_c))
+    start_index += 1
+Hx = Hx * (-1)
+perplexity = np.power(2,Hx)
+print ("Entropy = "+str(Hx))
+print ("Perplexity = "+str(perplexity))
 '''
 for diversity in [0.2, 0.5, 1.0, 1.2]:
     print()
