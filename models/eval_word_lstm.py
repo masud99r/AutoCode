@@ -38,7 +38,7 @@ def sample(preds, temperature=1.0):
     probas = np.random.multinomial(1, preds, 1)
     return np.argmax(probas)
 
-model = load_model("code_word_lstm_20.h5")
+model = load_model("bidirectional_lstm_20.h5")
 #model = load_model("rnn_code_20.h5")
 
 start_index =-1
