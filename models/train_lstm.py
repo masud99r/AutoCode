@@ -79,11 +79,12 @@ def sample(preds, temperature=1.0):
     return np.argmax(preds)
 
 # train the model, output generated text after each iteration
-for iteration in range(1, 200):#changed
+for iteration in range(1, 20):#changed
     print()
     print('-' * 100)
     print('Iteration', iteration)
     model.fit(X, y, batch_size=128, nb_epoch=1)
-    print ("Saving model")
-    model.save("code_char_lstm_200.h5",True)
-    print("Model Saved")
+
+print ("Saving lstm model")
+model.save("code_char_lstm_20.h5",True)
+print("LSTM Model Saved")

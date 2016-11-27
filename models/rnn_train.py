@@ -14,6 +14,7 @@ from __future__ import print_function
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
 from keras.layers import LSTM
+from keras.layers import SimpleRNN
 from keras.optimizers import RMSprop
 from keras.utils.data_utils import get_file
 import numpy as np
@@ -36,7 +37,7 @@ indices_word = dict((i, c) for i, c in enumerate(vocab))
 
 # cut the text in semi-redundant sequences of maxlen characters
 maxlen = 40
-step = 3
+step = 1
 sentences = []
 next_words = []
 for i in range(0, len(text_words) - maxlen, step):
@@ -56,7 +57,7 @@ for i, sentence in enumerate(sentences):
 # build the model: a single LSTM
 print('Build model...')
 model = Sequential()
-model.add(LSTM(128, input_shape=(maxlen, len(vocab))))
+model.add(SimpleRNN(128, input_shape=(maxlen, len(vocab))))
 model.add(Dense(len(vocab)))
 model.add(Activation('softmax'))
 
@@ -64,9 +65,9 @@ optimizer = RMSprop(lr=0.01)
 model.compile(loss='categorical_crossentropy', optimizer=optimizer)
 # train the model, output generated text after each iteration
 for iteration in range(1, 20):#changed
-    print('Iteration', iteration)
+    print('Iteration = ', iteration)
     model.fit(X, y, batch_size=128, nb_epoch=1)
 
-print ("Saving model")
+print ("Saving model...")
+model.save("rnn_code_20.h5",True)
 print("Model Saved")
-model.save("code_word_lstm_20.h5",True)

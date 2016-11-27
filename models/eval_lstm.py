@@ -56,40 +56,11 @@ def sample(preds, temperature=1.0):
     probas = np.random.multinomial(1, preds, 1)
     return np.argmax(probas)
 
-generated = 'START '
-#sentence ="asily wiped out, easily extinguished, by".lower()
-char_seq=''
-#print ("Sentence len = ", len(sentence))
-model = load_model("code_char_lstm_20.h5")
-'''
-for i in range(400):
-    x = np.zeros((1, maxlen, len(chars)))
-    for t, char in enumerate(sentence):
-        x[0, t, char_indices[char]] = 1.
-        char_seq = char_seq+char
-
-    preds = model.predict(x, verbose=0)[0]
-    next_index = sample(preds,0.5)
-    next_char = indices_char[next_index]
-
-    generated += next_char
-    sentence = sentence[1:] + next_char
-    sys.stdout.write(next_char)
-    sys.stdout.flush()
-print()
-print(generated)
-'''
-
-#start_index = random.randint(0, len(test_text) - maxlen - 1)
-
+model = load_model("code_word_lstm_20.h5")
 
 start_index =0
 generated = ''
 seglen = 10
-#sentence = test_text[start_index: start_index + seglen]
-#generated += sentence
-#print('----- Generating with seed: "' + sentence + '"')
-#sys.stdout.write(generated)
 
 Hx = 0
 print("Vocabulary length = "+str(len(chars)))
@@ -124,32 +95,3 @@ Hx = Hx * (-1)
 perplexity = np.power(2,Hx)
 print ("Entropy = "+str(Hx))
 print ("Perplexity = "+str(perplexity))
-'''
-for diversity in [0.2, 0.5, 1.0, 1.2]:
-    print()
-    print('----- diversity:', diversity)
-    start_index = random.randint(0, len(test_text) - maxlen - 1)
-    generated = ''
-    sentence = test_text[start_index: start_index + maxlen]
-    generated += sentence
-    print('----- Generating with seed: "' + sentence + '"')
-    sys.stdout.write(generated)
-
-    for i in range(400):
-        x = np.zeros((1, maxlen, len(chars)))
-        for t, char in enumerate(sentence):
-			if char not in sentence: 
-				continue 
-			x[0, t, char_indices[char]] = 1
-
-        preds = model.predict(x, verbose=0)[0]
-        next_index = sample(preds, diversity)
-        next_char = indices_char[next_index]
-
-        generated += next_char
-        sentence = sentence[1:] + next_char
-
-        sys.stdout.write(next_char)
-        sys.stdout.flush()
-    print()
-'''
