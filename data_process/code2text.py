@@ -18,30 +18,41 @@ def merge_all_dir_files(path2folder, toDir, is_remove_comments):
     with open(toDir+'/lucene.txt', 'w') as outfile:
         for fname in filenames:
             file_text = ""
-            #print(fname)
+            print(fname)
             with open(fname) as infile:
-                for line in infile:
+                content = infile.readlines()
+                print (len(content))
+                print (content[0])
+                for line in content:
+                    print ("Looping inner for file = "+str(count_code_file))
+                    print ("\tContent = " + line)
                     file_text = file_text + line
-                    #code_with_comments = code_with_comments + line
-                if is_remove_comments == True:
-                    file_text = remove_comments(file_text)
-                outfile.write(file_text)
-                outfile.write("\n***newfile***\n")
-                count_code_file += 1
 
+                    #code_with_comments = code_with_comments + line
+
+                if is_remove_comments == True:
+                    #file_text = remove_comments(file_text)
+                    file_text = removeComments(file_text)
+
+                file_text = file_text.replace("\n", " ForNewLine35214 ")
+                outfile.write(file_text)
+                outfile.write("\n ForNewFile35214 \n")
+                count_code_file += 1
+                print ("Processed = " + str(count_code_file))
                 if count_code_file%500 == 0:
                     print ("Processed = "+str(count_code_file))
+
     print 'Test'
     print count_code_file
-def remove_comments(text_with_comments):
-    text_without_comments = re.sub('/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+/','', text_with_comments)
-    text_without_comments = re.sub('//.*','', text_without_comments) #remvove // comments from java
-    return text_without_comments
+def removeComments(string):
+    string = re.sub(re.compile("/\*.*?\*/",re.DOTALL ) ,"" ,string) # remove all occurance streamed comments (/*COMMENT */) from string
+    string = re.sub(re.compile("//.*?\n" ) ,"" ,string) # remove all occurance singleline comments (//COMMENT\n ) from string
+    return string
 def main():
-    toDir = "I:/Dev/PythonProjects/dataset/projects_code/code_text/"
-    code_path = "I:/Dev/PythonProjects/dataset/projects_code/lucene/"
+    toDir = "K:/Masud/PythonProjects/dataset/autocode_data/github_projects_text/"
+    code_path = "K:/Masud/PythonProjects/dataset/autocode_data/github_projects_code/lucene/replicator/src/test/org/apache/lucene/replicator/http"
     #code_path = "I:/Dev/PythonProjects/dataset/projects_code/lucene/replicator/src/test/org/apache/lucene/replicator/"
-
+    print ("Start merging file into one file")
     merge_all_dir_files(code_path,toDir, is_remove_comments = True)
 
 if __name__ == "__main__":
